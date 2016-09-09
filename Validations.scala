@@ -1,11 +1,14 @@
+import scala.collection.mutable.ArraySeq
+import scala.collection.mutable.Buffer
+import scala.collection.mutable.ArrayBuffer
 
 class Cell(k: String, v: Any) {
-	def key: String = k
-	def value: Any = v
+  def key: String = k
+  def value: Any = v
 }
 
-class Row(c: Seq[Cell]) {
-	def cells = c
+class Row(c: Buffer[Cell]) {
+  def cells = c
 }
 
 
@@ -13,16 +16,26 @@ object Validations {
   def main(args: Array[String]) {
     // Run Functions
     println("Validations!")
-	var row: Cell = new Cell("Color", "White")
-	println("The row has " + row.key + " of " + row.value)
-/*    var result = sumInts(2,5)
-    println("result: " + result)
 
-    result = sumSquares(2,5)
-    println("result: " + result)
+  var cell = new Cell("Color", "White")
+  println("The row has " + cell.key + " of " + cell.value)
+  val row = createRow//()
+  }
 
-    result = sumPowersOfTwo(2,5)
-    println("result: " + result) */
+  def createRow : Row = {
+    // Create an array of 10 objects
+    var row = new Row(new ArrayBuffer[Cell](10))
+    row.cells += new Cell("Color", "Black")
+    println("Number of cells " + row.cells.length)
+    println("New cell " + row.cells(0).value)
+    row.cells += new Cell("Color", "Blue")
+    println("Number of cells " + row.cells.length)
+    println("New cell " + row.cells(1).value)
+    row.cells += new Cell("Color", "Red")
+    println("Number of cells " + row.cells.length)
+    println("New cell " + row.cells(2).value)
+
+    row
   }
 
   def id(x: Int, message: String)  = {
@@ -32,7 +45,7 @@ object Validations {
 
   def square(x: Int, message: String): Int = {
     println(message + "square")
-	x * x
+    x * x
   }
 
   def powerOfTwo(x: Int, message: String) : Int = {
