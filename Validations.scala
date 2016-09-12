@@ -22,6 +22,8 @@ object Validations {
 
     var table = createTable();
     println("new Table: " + table)
+
+    checkAndApplyRules(rules, table)
   }
 
   def createRow(color: String, size: String, price: Number, isNew: Boolean, serial: String, model: String) : Row = {
@@ -47,7 +49,6 @@ object Validations {
     table
   }
 
-
 // Validations
   def isBoolean(text: String): Boolean = Try(text.toBoolean).getOrElse(false)
 
@@ -68,14 +69,14 @@ object Validations {
         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   }
 
-// // Register rules
-//   def rules: Array[(String) => Unit] = {
-//
-//   }
+// Register rules
+  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail)
 
-  def checkRules(rules: Array[(String) => Unit ]) : Unit = {
+  def checkAndApplyRules(rules: Array[(String) => Boolean ], table: Buffer[Row]) : Unit = {
     println("Check rules")
-  }
+    for(row <- table; cell <- row.cells)
+      println(cell.key + ": " + cell.value)
 
+  }
 
 }
