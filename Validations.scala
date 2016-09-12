@@ -1,3 +1,4 @@
+import scala.util.Try
 import scala.collection.mutable.ArraySeq
 import scala.collection.mutable.Buffer
 import scala.collection.mutable.ArrayBuffer
@@ -15,6 +16,9 @@ object Validations {
     println("Validations!")
     var textToEval = "Color"
     println(textToEval + ": " +  isTextValid(textToEval))
+
+    textToEval = "true"
+    println(textToEval + ": " +  isBoolean(textToEval))
 
     var table = createTable();
     println("new Table: " + table)
@@ -45,15 +49,7 @@ object Validations {
 
 
 // Validations
-  def isString(text: String): Boolean = {
-    return false;
-  }
-
-  def isNumber(text: String): Boolean = {
-    return false;
-  }
-
-  def isBoolean(text: String): Boolean = text.toBoolean
+  def isBoolean(text: String): Boolean = Try(text.toBoolean).getOrElse(false)
 
   def isTextValid(text: String): Boolean = {
 
@@ -69,13 +65,13 @@ object Validations {
 
   def isEmail(text: String): Boolean = {
     return text.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   }
 
 // // Register rules
-//  def rules: Array[(String) => Unit] = {
+//   def rules: Array[(String) => Unit] = {
 //
-//  }
+//   }
 
   def checkRules(rules: Array[(String) => Unit ]) : Unit = {
     println("Check rules")
