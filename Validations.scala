@@ -13,9 +13,11 @@ object Validations {
   def main(args: Array[String]) {
     // Run Functions
     println("Validations!")
+    var textToEval = "Color"
+    println(textToEval + ": " +  isTextValid(textToEval))
 
-  var table = createTable();
-  println("new Table: " + table)
+    var table = createTable();
+    println("new Table: " + table)
   }
 
   def createRow(color: String, size: String, price: Number, isNew: Boolean, serial: String, model: String) : Row = {
@@ -40,5 +42,44 @@ object Validations {
     table += createRow("Orange", "8", 100.00, false, "agweqwer", "fairly lady Z")
     table
   }
+
+
+// Validations
+  def isString(text: String): Boolean = {
+    return false;
+  }
+
+  def isNumber(text: String): Boolean = {
+    return false;
+  }
+
+  def isBoolean(text: String): Boolean = text.toBoolean
+
+  def isTextValid(text: String): Boolean = {
+
+    // Check First Ocurrance
+    // val pattern = "^[a-zA-Z][a-zA-Z0-9]*".r
+    // val matches = pattern.findFirstIn(text)
+    // var result = !matches.isEmpty && matches.get.length == text.length
+    // println(text + ": " + result + ", matches.: " + matches)
+    // return result
+
+    text.matches("^[a-zA-Z][a-zA-Z0-9]*")
+  }
+
+  def isEmail(text: String): Boolean = {
+    return text.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+  }
+
+// // Register rules
+//  def rules: Array[(String) => Unit] = {
+//
+//  }
+
+  def checkRules(rules: Array[(String) => Unit ]) : Unit = {
+    println("Check rules")
+  }
+
 
 }
