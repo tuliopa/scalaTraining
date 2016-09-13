@@ -7,7 +7,13 @@ case class Cell(key: String, value: Any)
 
 class Row(c: Buffer[Cell]) {
   def cells = c
+
+  def getValue(key: String): Any = {
+      var selectedCell = cells.filter(f => f.key.equals(key)).asInstanceOf[Buffer[Row]]
+      return selectedCell(0)
+  }
 }
+
 
 
 object Validations {
@@ -26,7 +32,7 @@ object Validations {
     checkAndApplyRules(rules, table)
   }
 
-  def createRow(color: String, size: String, price: Number, isNew: Boolean, serial: String, model: String) : Row = {
+  def createRow(color: String, size: String, price: Any, isNew: Any, serial: String, model: String) : Row = {
     // Create a row of cells
     var row = new Row(new ArrayBuffer[Cell](10))
     row.cells += new Cell("color", color)
@@ -41,11 +47,11 @@ object Validations {
   def createTable() : Buffer[Row] = {
     var table = new ArrayBuffer[Row](5)
 
-    table += createRow("Black", "5", 40.00, true, "asdaskr", "Elantra")
-    table += createRow("Blue", "1", 50.00, true, "1234dfqwer", "Yaris")
-    table += createRow("Gree", "7", 30.00, false, "ariupip", "Chevy")
-    table += createRow("Red", "3", 20.00, true, "mjkojpia", "Sentra")
-    table += createRow("Orange", "8", 100.00, false, "agweqwer", "fairly lady Z")
+    table += createRow("Black", "5", 40.00, true, null, "Elantra")
+    table += createRow("Blue", "1", null, true, "1234dfqwer", "Yaris")
+    table += createRow("Gree", "7", 30.00, null, "ariupip", "Chevy")
+    table += createRow("Red", "3", "20.00", true, "mjkojpia", "Sentra")
+    table += createRow("Orange", "8", 100.00, false, "agweqwer", "fairly lady Z")//Add generic model
     table
   }
 
@@ -69,14 +75,22 @@ object Validations {
         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   }
 
-// Register rules
-  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail)
-
-  def checkAndApplyRules(rules: Array[(String) => Boolean ], table: Buffer[Row]) : Unit = {
-    println("Check rules")
-    for(row <- table; cell <- row.cells)
-      println(cell.key + ": " + cell.value)
+  def evalPrice(): Unit = {
 
   }
 
+// Register rules
+  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail)
+
+// TODO Change Unit to Row.
+  def checkAndApplyRules(rules: Array[(String) => Boolean ], table: Buffer[Row]) : Unit = {
+    println("Check rules")
+    for(row <- table){
+      val whatIs = row.getValue("price").asInstanceOf[Cell]
+      println("whatIs " + whatIs)
+      println("key " + whatIs.key)
+      println("value " + whatIs.value)
+
+    }
+  }
 }
