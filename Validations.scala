@@ -3,7 +3,7 @@ import scala.collection.mutable.ArraySeq
 import scala.collection.mutable.Buffer
 import scala.collection.mutable.ArrayBuffer
 
-case class Cell(key: String, value: Any)
+case class Cell(key: String, var value: String)
 
 class Row(c: Buffer[Cell]) {
   def cells = c
@@ -25,22 +25,18 @@ class Row(c: Buffer[Cell]) {
 
 object Validations {
   def main(args: Array[String]) {
-    // Run Functions
-    println("Validations!")
-    var textToEval = "Color"
-    println(textToEval + ": " +  isTextValid(textToEval))
-
-    textToEval = "true"
-    println(textToEval + ": " +  isBoolean(textToEval))
+    // Run Function
+    println("\nStandarize table\n")
 
     var table = createTable();
-    println("new Table: " + table)
-
+    println("Before standarization:")
+    printTable(table)
     checkAndApplyRules(rules, table)
+    println("After standarization:")
     printTable(table)
   }
 
-  def createRow(color: String, size: String, price: Any, isNew: Any, serial: String, model: String) : Row = {
+  def createRow(color: String, size: String, price: String, isNew: String, serial: String, model: String) : Row = {
     // Create a row of cells
     var row = new Row(new ArrayBuffer[Cell](10))
     row.cells += new Cell("color", color)
@@ -55,63 +51,44 @@ object Validations {
   def createTable() : Buffer[Row] = {
     var table = new ArrayBuffer[Row](5)
 
-    table += createRow("Black", "5", 40.00, true, null, "Elantra")
-    table += createRow("Blue", "1", null, true, "1234dfqwer", "Yaris")
-    table += createRow("Gree", "7", 30.00, null, "ariupip", "Chevy")
-    table += createRow("Red", "3", "20.00", true, "mjkojpia", "Sentra")
-    table += createRow("Orange", "8", 100.00, false, "agweqwer", "fairly lady Z")//Add generic model
+    table += createRow("Black", "5", "40.00", "true", null, "Elantra")
+    table += createRow("Blue", "1", null, "true", "1234dfqwer", "Yaris")
+    table += createRow("Green", "7", "30.00", null, "ariupip", "Chevy")
+    table += createRow("Red", "3", "20.00", "true", "mjkojpia", "Sentra")
+    table += createRow("Orange", "8", "100.as0", "false", "agweqwer", "fairly lady Z")
     table
   }
 
-  def printTable(table: Buffer[Row]): Unit = {
-    for(row <- table) {
-      println(row.toString())
-    }
-  }
+  def printTable(table: Buffer[Row]): Unit = for(row <- table) println(row.toString())
 
 // Validations
-  def isBoolean(text: String): Boolean = Try(text.toBoolean).getOrElse(false)
-
-  def isTextValid(text: String): Boolean = {
-
-    // Check First Ocurrance
-    // val pattern = "^[a-zA-Z][a-zA-Z0-9]*".r
-    // val matches = pattern.findFirstIn(text)
-    // var result = !matches.isEmpty && matches.get.length == text.length
-    // println(text + ": " + result + ", matches.: " + matches)
-    // return result
-
-    text.matches("^[a-zA-Z][a-zA-Z0-9]*")
-  }
-
-  def isEmail(text: String): Boolean = {
-    return text.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
-  }
-
   def evalPrice(row: Row): Unit = {
     val cell = row.getValue("price").asInstanceOf[Cell]
-    println("Eval Price: " + cell)
+    try {
+      cell.value.toDouble
+    } catch {
+      case e: Exception => cell.value = "0.00"
+    }
   }
 
   def evalIsNew(row: Row): Unit = {
     val cell = row.getValue("isNew").asInstanceOf[Cell]
-    println("Eval Price: " + cell)
+    try {
+        cell.value.toBoolean
+    } catch {
+        case e: Exception => cell.value = "false"
+    }
   }
 
-// Register rules
-//  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail, evalPrice)
+  // Register rules
   val rules: Array[(Row) => Unit] = Array(evalPrice, evalIsNew)
 
-// TODO Change Unit to Row.
   def checkAndApplyRules(rules: Array[(Row) => Unit], table: Buffer[Row]) : Unit = {
-    println("Check rules")
+    println("Checking rules and fixing it.")
     for(row <- table) {
       for(r <- rules) {
           r(row)
-          //row.cells map r
       }
-
     }
   }
 }
