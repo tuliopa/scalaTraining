@@ -12,9 +12,16 @@ class Row(c: Buffer[Cell]) {
     var selectedCell = cells.filter(f => f.key.equals(key)).asInstanceOf[Buffer[Row]]
     return selectedCell(0)
   }
+
+  override def toString(): String = {
+    var message: String = "{"
+    for(c <- cells) {
+      message ++= "\n" + c.key + ": " + c.value
+    }
+    message ++= "\n}"
+    return message
+  }
 }
-
-
 
 object Validations {
   def main(args: Array[String]) {
@@ -30,6 +37,7 @@ object Validations {
     println("new Table: " + table)
 
     checkAndApplyRules(rules, table)
+    printTable(table)
   }
 
   def createRow(color: String, size: String, price: Any, isNew: Any, serial: String, model: String) : Row = {
@@ -53,6 +61,12 @@ object Validations {
     table += createRow("Red", "3", "20.00", true, "mjkojpia", "Sentra")
     table += createRow("Orange", "8", 100.00, false, "agweqwer", "fairly lady Z")//Add generic model
     table
+  }
+
+  def printTable(table: Buffer[Row]): Unit = {
+    for(row <- table) {
+      println(row.toString())
+    }
   }
 
 // Validations
