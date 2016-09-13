@@ -75,17 +75,25 @@ object Validations {
         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   }
 
-  def evalPrice(): Unit = {
+  def evalPrice(c: Cell): Unit = {
+      println("Eval Price: " + c)
+  }
 
+  def evalIsNew(c: Cell): Unit = {
+      println("Eval Is New: " + c)
   }
 
 // Register rules
-  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail)
+//  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail, evalPrice)
+  val rules: Array[(Cell) => Unit] = Array(evalPrice, evalIsNew)
 
 // TODO Change Unit to Row.
-  def checkAndApplyRules(rules: Array[(String) => Boolean ], table: Buffer[Row]) : Unit = {
+  def checkAndApplyRules(rules: Array[(Cell) => Unit], table: Buffer[Row]) : Unit = {
     println("Check rules")
     for(row <- table){
+      for(r <- rules){
+          row.cells map r
+      }
       val whatIs = row.getValue("price").asInstanceOf[Cell]
       println("whatIs " + whatIs)
       println("key " + whatIs.key)
