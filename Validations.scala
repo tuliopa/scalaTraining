@@ -9,8 +9,8 @@ class Row(c: Buffer[Cell]) {
   def cells = c
 
   def getValue(key: String): Any = {
-      var selectedCell = cells.filter(f => f.key.equals(key)).asInstanceOf[Buffer[Row]]
-      return selectedCell(0)
+    var selectedCell = cells.filter(f => f.key.equals(key)).asInstanceOf[Buffer[Row]]
+    return selectedCell(0)
   }
 }
 
@@ -75,29 +75,28 @@ object Validations {
         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
   }
 
-  def evalPrice(c: Cell): Unit = {
-      println("Eval Price: " + c)
+  def evalPrice(row: Row): Unit = {
+    val cell = row.getValue("price").asInstanceOf[Cell]
+    println("Eval Price: " + cell)
   }
 
-  def evalIsNew(c: Cell): Unit = {
-      println("Eval Is New: " + c)
+  def evalIsNew(row: Row): Unit = {
+    val cell = row.getValue("isNew").asInstanceOf[Cell]
+    println("Eval Price: " + cell)
   }
 
 // Register rules
 //  val rules: Array[(String) => Boolean] = Array(isBoolean, isTextValid, isEmail, evalPrice)
-  val rules: Array[(Cell) => Unit] = Array(evalPrice, evalIsNew)
+  val rules: Array[(Row) => Unit] = Array(evalPrice, evalIsNew)
 
 // TODO Change Unit to Row.
-  def checkAndApplyRules(rules: Array[(Cell) => Unit], table: Buffer[Row]) : Unit = {
+  def checkAndApplyRules(rules: Array[(Row) => Unit], table: Buffer[Row]) : Unit = {
     println("Check rules")
-    for(row <- table){
-      for(r <- rules){
-          row.cells map r
+    for(row <- table) {
+      for(r <- rules) {
+          r(row)
+          //row.cells map r
       }
-      val whatIs = row.getValue("price").asInstanceOf[Cell]
-      println("whatIs " + whatIs)
-      println("key " + whatIs.key)
-      println("value " + whatIs.value)
 
     }
   }
